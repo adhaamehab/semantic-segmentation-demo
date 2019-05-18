@@ -8,9 +8,15 @@ import dash_html_components as html
 import base64
 from src.model import DeepLabModel
 from src.utils import inference
-import requests
 
 # Setup the app
+
+
+STATIC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+MODEL = DeepLabModel("models/ade20kmodel_may2019.gz")
+print('model downloaded successfully')
+
 app = dash.Dash(
     __name__,
     static_folder="./static/",
@@ -18,25 +24,6 @@ app = dash.Dash(
 )
 
 server = app.server
-STATIC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
-
-MODEL_URL = 'https://www.dropbox.com/s/upy0a07e38243wc/ade20kmodel_may2019.gz?dl=1'
-
-
-def download_file(url):
-    local_filename = 'ade20kmodel_may2019.gz'
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
-                    # f.flush()
-    return local_filename
-
-
-download_file(MODEL_URL)
-MODEL = DeepLabModel("ade20kmodel_may2019.gz")
 
 default_img = STATIC_PATH + "/demo.png"
 
