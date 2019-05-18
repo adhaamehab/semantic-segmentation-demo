@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,400i|Nunito:300,300i" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+    <style>
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
+        }
+
+        html {
+            box-sizing: border-box;
+            font-size: 62.5%;
+        }
+
+        body {
+            font-family: "Nunito", sans-serif;
+            color: #333;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 60%;
+            margin: 2rem auto;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 5vw);
+            grid-gap: 1.5rem;
+        }
+
+        .gallery__img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery__item--1 {
+            grid-column-start: 1;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+            /** Alternative Syntax **/
+            /* grid-column: 1 / span 2;  */
+            /* grid-row: 1 / span 2; */
+        }
+
+        .gallery__item--2 {
+            grid-column-start: 3;
+            grid-column-end: 5;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+            /** Alternative Syntax **/
+            /* grid-column: 3 / span 2;  */
+            /* grid-row: 1 / span 2; */
+        }
+
+        .gallery__item--3 {
+            grid-column-start: 5;
+            grid-column-end: 9;
+            grid-row-start: 1;
+            grid-row-end: 6;
+
+            /** Alternative Syntax **/
+            /* grid-column: 5 / span 4;
+  grid-row: 1 / span 5; */
+        }
+
+        .gallery__item--4 {
+            grid-column-start: 1;
+            grid-column-end: 5;
+            grid-row-start: 3;
+            grid-row-end: 6;
+
+            /** Alternative Syntax **/
+            /* grid-column: 1 / span 4;  */
+            /* grid-row: 3 / span 3; */
+        }
+
+        .gallery__item--5 {
+            grid-column-start: 1;
+            grid-column-end: 5;
+            grid-row-start: 6;
+            grid-row-end: 9;
+
+            /** Alternative Syntax **/
+            /* grid-column: 1 / span 4; */
+            /* grid-row: 6 / span 3; */
+        }
+
+        .gallery__item--6 {
+            grid-column-start: 5;
+            grid-column-end: 9;
+            grid-row-start: 6;
+            grid-row-end: 9;
+
+            /** Alternative Syntax **/
+            /* grid-column: 5 / span 4; */
+            /* grid-row: 6 / span 3; */
+        }
+        input[type=text] {
+            width: 300px;
+        }
+    </style>
+    <title>Scene parsing</title>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <h1 attr="font-size: 300px;">Scene parsing</h1>
+            <br>
+            <b attr="font-size: 150px;">An End to end semanatic segmantation demo based on deeplab</b><br><br>
+        </div>
+        <form action="/predict" method="get">
+            Image url <input type="text" name="img" placeholder="Enter an Image url here"><input type="submit" value="predict">
+        </form><br><br>
+        Click on image to test
+        <div class="gallery">
+            <figure class="gallery__item gallery__item--1">
+                <a href="predict?img=https://farm1.static.flickr.com/719/20969576505_bc8a4808e5_b.jpg">
+                <img src="https://farm1.static.flickr.com/719/20969576505_bc8a4808e5_b.jpg" alt="Gallery image 1"
+                    class="gallery__img">
+                </a>
+            </figure>
+            <figure class="gallery__item gallery__item--2">
+                <a href="predict?img=https://media.brstatic.com/2018/08/28152103/the-10-best-and-real-work-at-home-jobs.jpg" href="">
+                <img src="https://media.brstatic.com/2018/08/28152103/the-10-best-and-real-work-at-home-jobs.jpg"
+                    alt="Gallery image 2" class="gallery__img">
+                </a>
+            </figure>
+            <figure class="gallery__item gallery__item--3">
+                <a href="predict?img=https://images.dailyhive.com/20180626145659/The_Summer_Concert_Series_at_the_Plaza.jpg" href="">
+                <img src="https://images.dailyhive.com/20180626145659/The_Summer_Concert_Series_at_the_Plaza.jpg"
+                    alt="Gallery image 3" class="gallery__img">
+                </a>
+            </figure>
+            <figure class="gallery__item gallery__item--4">
+                <a href="predict?img=https://images.unsplash.com/photo-1557431930-1e54879bad14?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80" href="">
+                <img src="https://images.unsplash.com/photo-1557431930-1e54879bad14?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80"
+                    alt="Gallery image 4" class="gallery__img">
+                </a>
+            </figure>
+            <figure class="gallery__item gallery__item--5">
+                <a href="predict?img=https://images.unsplash.com/photo-1534243420028-d7b79ea1c703?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80">
+                <img src="https://images.unsplash.com/photo-1534243420028-d7b79ea1c703?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80"
+                    alt="Gallery image 5" class="gallery__img">
+                </a>
+            </figure>
+            <figure class="gallery__item gallery__item--6">
+                <a href="predict?img=https://amp.businessinsider.com/images/5386375d69beddc0794e37dd-750-563.jpg">
+                <img src="https://amp.businessinsider.com/images/5386375d69beddc0794e37dd-750-563.jpg"
+                    alt="Gallery image 6" class="gallery__img">
+                </a>
+            </figure>
+        </div>
+    </div>
+</body>
+<footer>
+    Check developer's <a href="http://adhaamehab.me">site</a>
+</footer>
+
+</html>
