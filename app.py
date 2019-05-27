@@ -14,8 +14,6 @@ from src.utils import inference
 
 STATIC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 
-MODEL = DeepLabModel("models/ade20kmodel_may2019.gz")
-print('model downloaded successfully')
 
 app = dash.Dash(
     __name__,
@@ -145,5 +143,6 @@ def predict_image(n_clicks, url):
 
 
 if __name__ == "__main__":
-
-    app.run_server(debug=True)
+    MODEL = DeepLabModel("models/ade20kmodel_may2019.gz")
+    print('model downloaded successfully')
+    app.run_server()
