@@ -145,4 +145,4 @@ def predict_image(n_clicks, url):
 if __name__ == "__main__":
     MODEL = DeepLabModel("models/ade20kmodel_may2019.gz")
     print('model downloaded successfully')
-    app.run_server()
+    app.run_server(host='0.0.0.0')

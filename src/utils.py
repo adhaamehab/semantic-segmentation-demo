@@ -8,53 +8,33 @@ from matplotlib import pyplot as plt
 from PIL import Image
 
 
-"""Adobted from github"""
+"""Adobted from tensorflow"""
 
 
 def create_pascal_label_colormap():
-    """Creates a label colormap used in PASCAL VOC segmentation benchmark.
 
-  Returns:
-    A Colormap for visualizing segmentation results.
-  """
-    colormap = np.zeros((256, 3), dtype=int)
-    ind = np.arange(256, dtype=int)
+  colormap = np.zeros((256, 3), dtype=int)
+  ind = np.arange(256, dtype=int)
 
-    for shift in reversed(range(8)):
-        for channel in range(3):
-            colormap[:, channel] |= ((ind >> channel) & 1) << shift
-        ind >>= 3
+  for shift in reversed(range(8)):
+    for channel in range(3):
+      colormap[:, channel] |= ((ind >> channel) & 1) << shift
+    ind >>= 3
 
-    return colormap
-
-
-"""Adobted from github"""
+  return colormap
 
 
 def label_to_color_image(label):
-    """Adds color defined by the dataset colormap to the label.
 
-  Args:
-    label: A 2D array with integer type, storing the segmentation label.
+  if label.ndim != 2:
+    raise ValueError('Expect 2-D input label')
 
-  Returns:
-    result: A 2D array with floating type. The element of the array
-      is the color indexed by the corresponding element in the input label
-      to the PASCAL color map.
+  colormap = create_pascal_label_colormap()
 
-  Raises:
-    ValueError: If label is not of rank 2 or its value is larger than color
-      map maximum entry.
-  """
-    if label.ndim != 2:
-        raise ValueError("Expect 2-D input label")
+  if np.max(label) >= len(colormap):
+    raise ValueError('label value too large.')
 
-    colormap = create_pascal_label_colormap()
-
-    if np.max(label) >= len(colormap):
-        raise ValueError("label value too large.")
-
-    return colormap[label]
+  return colormap[label]
 
 
 def inference(model, url):
@@ -74,30 +54,31 @@ def inference(model, url):
 
     plt.subplot(grid_spec[0])
     plt.imshow(image)
-    plt.axis("off")
-    plt.title("input image")
+    plt.axis('off')
+    plt.title('input image')
 
     plt.subplot(grid_spec[1])
     seg_image = label_to_color_image(seg_map).astype(np.uint8)
     plt.imshow(seg_image)
-    plt.axis("off")
-    plt.title("segmentation map")
+    plt.axis('off')
+    plt.title('segmentation map')
 
     plt.subplot(grid_spec[2])
     plt.imshow(image)
     plt.imshow(seg_image, alpha=0.7)
-    plt.axis("off")
-    plt.title("segmentation overlay")
+    plt.axis('off')
+    plt.title('segmentation overlay')
+
     unique_labels = np.unique(seg_map)
     ax = plt.subplot(grid_spec[3])
     plt.imshow(
-        CM[unique_labels].astype(np.uint8), interpolation="nearest"
-    )  # adobted from tensorflow - model zoo
+        FULL_COLOR_MAP[unique_labels].astype(np.uint8), interpolation='nearest')
     ax.yaxis.tick_right()
-    plt.yticks(range(len(unique_labels)), NAMES[unique_labels])
+    plt.yticks(range(len(unique_labels)), LABEL_NAMES[unique_labels])
     plt.xticks([], [])
     ax.tick_params(width=0.0)
-    plt.grid("off")
+    plt.grid('off')
+    plt.show()
 
     img = BytesIO()
     plt.savefig(img, format="png")
@@ -105,160 +86,9 @@ def inference(model, url):
     return img
 
 
-NAMES = np.asarray(
-    [
-        "airplane, aeroplane, plane",
-        "animal, animate being, beast, brute, creature, fauna",
-        "apparel, wearing apparel, dress, clothes",
-        "arcade machine",
-        "armchair",
-        "ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, dustbin, trash barrel, trash bin",
-        "awning, sunshade, sunblind",
-        "background",
-        "bag",
-        "ball",
-        "bannister, banister, balustrade, balusters, handrail",
-        "bar",
-        "barrel, cask",
-        "base, pedestal, stand",
-        "basket, handbasket",
-        "bathtub, bathing tub, bath, tub",
-        "bed ",
-        "bench",
-        "bicycle, bike, wheel, cycle ",
-        "blanket, cover",
-        "blind, screen",
-        "boat",
-        "book",
-        "bookcase",
-        "booth, cubicle, stall, kiosk",
-        "bottle",
-        "box",
-        "bridge, span",
-        "buffet, counter, sideboard",
-        "building, edifice",
-        "bulletin board, notice board",
-        "bus, autobus, coach, charabanc, double-decker, jitney, motorbus, motorcoach, omnibus, passenger vehicle",
-        "cabinet",
-        "canopy",
-        "car, auto, automobile, machine, motorcar",
-        "case, display case, showcase, vitrine",
-        "ceiling",
-        "chair",
-        "chandelier, pendant, pendent",
-        "chest of drawers, chest, bureau, dresser",
-        "clock",
-        "coffee table, cocktail table",
-        "column, pillar",
-        "computer, computing machine, computing device, data processor, electronic computer, information processing system",
-        "conveyer belt, conveyor belt, conveyer, conveyor, transporter",
-        "counter",
-        "countertop",
-        "cradle",
-        "crt screen",
-        "curtain, drape, drapery, mantle, pall",
-        "cushion",
-        "desk",
-        "dirt track",
-        "dishwasher, dish washer, dishwashing machine",
-        "door, double door",
-        "earth, ground",
-        "escalator, moving staircase, moving stairway",
-        "fan",
-        "fence, fencing",
-        "field",
-        "fireplace, hearth, open fireplace",
-        "flag" "floor, flooring",
-        "flower",
-        "food, solid food",
-        "fountain",
-        "glass, drinking glass",
-        "grandstand, covered stand",
-        "grass",
-        "hill",
-        "hood, exhaust hood",
-        "house",
-        "hovel, hut, hutch, shack, shanty",
-        "kitchen island",
-        "lake",
-        "lamp",
-        "land, ground, soil",
-        "light, light source",
-        "microwave, microwave oven",
-        "minibike, motorbike",
-        "mirror",
-        "monitor, monitoring device",
-        "mountain, mount",
-        "ottoman, pouf, pouffe, puff, hassock",
-        "oven",
-        "painting, picture",
-        "palm, palm tree",
-        "path",
-        "person, individual, someone, somebody, mortal, soul",
-        "pier, wharf, wharfage, dock",
-        "pillow",
-        "plant, flora, plant life",
-        "plate",
-        "plaything, toy",
-        "pole",
-        "pool table, billiard table, snooker table",
-        "poster, posting, placard, notice, bill, card",
-        "pot, flowerpot",
-        "radiator",
-        "railing, rail",
-        "refrigerator, icebox",
-        "river",
-        "road, route",
-        "rock, stone",
-        "rug, carpet, carpeting",
-        "runway",
-        "sand",
-        "sconce",
-        "screen door, screen",
-        "screen, silver screen, projection screen",
-        "sculpture",
-        "sea",
-        "seat",
-        "shelf",
-        "ship",
-        "shower",
-        "sidewalk, pavement",
-        "signboard, sign",
-        "sink",
-        "sky",
-        "skyscraper",
-        "sofa, couch, lounge",
-        "stage",
-        "stairs, steps",
-        "stairway, staircase",
-        "step, stair",
-        "stool",
-        "stove, kitchen stove, range, kitchen range, cooking stove",
-        "streetlight, street lamp",
-        "swimming pool, swimming bath, natatorium",
-        "swivel chair",
-        "table",
-        "tank, storage tank",
-        "television receiver, television, television set, tv, tv set, idiot box, boob tube, telly, goggle box",
-        "tent, collapsible shelter",
-        "toilet, can, commode, crapper, pot, potty, stool, throne",
-        "towel",
-        "tower",
-        "trade name, brand name, brand, marque",
-        "traffic light, traffic signal, stoplight",
-        "tray",
-        "tree",
-        "truck, motortruck",
-        "van",
-        "vase",
-        "wall",
-        "wardrobe, closet, press",
-        "washer, automatic washer, washing machine",
-        "water",
-        "waterfall, falls",
-        "windowpane, window ",
-    ]
-)
+LABEL_NAMES = np.asarray([
+  'background','wall','building, edifice','sky','floor, flooring','tree','ceiling','road, route','bed ','windowpane, window ','grass','cabinet','sidewalk, pavement','person, individual, someone, somebody, mortal, soul','earth, ground','door, double door','table','mountain, mount','plant, flora, plant life','curtain, drape, drapery, mantle, pall','chair','car, auto, automobile, machine, motorcar','water','painting, picture','sofa, couch, lounge','shelf','house','sea','mirror','rug, carpet, carpeting','field','armchair','seat','fence, fencing','desk','rock, stone','wardrobe, closet, press','lamp','bathtub, bathing tub, bath, tub','railing, rail','cushion','base, pedestal, stand','box','column, pillar','signboard, sign','chest of drawers, chest, bureau, dresser','counter','sand','sink','skyscraper','fireplace, hearth, open fireplace','refrigerator, icebox','grandstand, covered stand','path','stairs, steps','runway','case, display case, showcase, vitrine','pool table, billiard table, snooker table','pillow','screen door, screen','stairway, staircase','river','bridge, span','bookcase','blind, screen','coffee table, cocktail table','toilet, can, commode, crapper, pot, potty, stool, throne','flower','book','hill','bench','countertop','stove, kitchen stove, range, kitchen range, cooking stove','palm, palm tree','kitchen island','computer, computing machine, computing device, data processor, electronic computer, information processing system','swivel chair','boat','bar','arcade machine','hovel, hut, hutch, shack, shanty','bus, autobus, coach, charabanc, double-decker, jitney, motorbus, motorcoach, omnibus, passenger vehicle','towel','light, light source','truck, motortruck','tower','chandelier, pendant, pendent','awning, sunshade, sunblind','streetlight, street lamp','booth, cubicle, stall, kiosk','television receiver, television, television set, tv, tv set, idiot box, boob tube, telly, goggle box','airplane, aeroplane, plane','dirt track','apparel, wearing apparel, dress, clothes','pole','land, ground, soil','bannister, banister, balustrade, balusters, handrail','escalator, moving staircase, moving stairway','ottoman, pouf, pouffe, puff, hassock','bottle','buffet, counter, sideboard','poster, posting, placard, notice, bill, card','stage','van','ship','fountain','conveyer belt, conveyor belt, conveyer, conveyor, transporter','canopy','washer, automatic washer, washing machine','plaything, toy','swimming pool, swimming bath, natatorium','stool','barrel, cask','basket, handbasket','waterfall, falls','tent, collapsible shelter','bag','minibike, motorbike','cradle','oven','ball','food, solid food','step, stair','tank, storage tank','trade name, brand name, brand, marque','microwave, microwave oven','pot, flowerpot','animal, animate being, beast, brute, creature, fauna','bicycle, bike, wheel, cycle ','lake','dishwasher, dish washer, dishwashing machine','screen, silver screen, projection screen','blanket, cover','sculpture','hood, exhaust hood','sconce','vase','traffic light, traffic signal, stoplight','tray','ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, dustbin, trash barrel, trash bin','fan','pier, wharf, wharfage, dock','crt screen','plate','monitor, monitoring device','bulletin board, notice board','shower','radiator','glass, drinking glass','clock','flag'
+])
 
-LM = np.arange(len(NAMES)).reshape(len(NAMES), 1)
-CM = label_to_color_image(LM)
+FULL_LABEL_MAP = np.arange(len(LABEL_NAMES)).reshape(len(LABEL_NAMES), 1)
+FULL_COLOR_MAP = label_to_color_image(FULL_LABEL_MAP)
