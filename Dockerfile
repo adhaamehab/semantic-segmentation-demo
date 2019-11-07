@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 
 RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-dev
+    apt-get install -y python3-pip python3-dev wget
 
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
@@ -15,10 +15,10 @@ RUN pip3 install -r requirements.txt
 
 COPY . /app
 
-RUN mkdir models
+RUN mkdir -p models
 
 RUN wget -O models/ade20kmodel_may2019.gz https://www.dropbox.com/s/upy0a07e38243wc/ade20kmodel_may2019.gz?dl=0
 
 EXPOSE 8050
 
-RUN python3 app.py
+CMD ["python3", "app.py"]
