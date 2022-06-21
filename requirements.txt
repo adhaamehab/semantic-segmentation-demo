@@ -30,7 +30,7 @@ MarkupSafe==1.1.1
 matplotlib
 mock==3.0.5
 nbformat==4.4.0
-numpy==1.16.3
+numpy==1.22.0
 Pillow==6.0.0
 plotly==3.9.0
 protobuf==3.7.1
